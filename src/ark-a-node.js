@@ -1,43 +1,7 @@
 /* global screen */
 const { initAudio } = require('./helpers/sounds')
 const { initCanvas, writeText } = require('./helpers/drawing')
-const { generateWall, play } = require('./helpers/game')
-
-const getOptions = (selector) => {
-  const game = document.querySelector(selector)
-
-  let screenWidth = game.clientWidth
-  let screenHeight = screenWidth * 9 / 16
-
-  if (screenHeight > game.clientHeight) {
-    screenHeight = game.clientHeight
-    screenWidth = screenHeight * 16 / 9
-  }
-
-  return {
-    screenWidth,
-    screenHeight,
-    wallWidth: 7,
-    wallHeight: 6,
-
-    fontSize: 24 * screenHeight / 480,
-    speed: Math.ceil(10 * 480 / screenHeight),
-    ballSize: 7 * screenHeight / 480,
-    wallPieceHeight: 10 * screenHeight / 240,
-    padWidth: 120 * screenWidth / 640,
-    padHeight: 15 * screenHeight / 480,
-    wallColors: [
-      'black',
-      'indianred',
-      'seagreen',
-      'dodgerblue',
-      'orange',
-      'mediumpurple',
-      'gold',
-      'whitesmoke'
-    ]
-  }
-}
+const { getOptions, generateWall, play } = require('./helpers/game')
 
 function start (selector) {
   const options = getOptions(selector)
