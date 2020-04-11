@@ -4,6 +4,7 @@
   "description": "Just an arkanoid-like game in Javascript",
   "main": "index.js",
   "scripts": {
+    "build": "webpack --mode=production",
     "start": "webpack-dev-server --open"
   },
   "author": "Davide Cassenti",
