@@ -33,6 +33,8 @@ const playVictorySound = jingle(
   [698, 500]
 )
 
+beep(0, 0)
+
 module.exports = {
   beep,
   pause,
