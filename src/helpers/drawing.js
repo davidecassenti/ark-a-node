@@ -2,7 +2,6 @@ const { matrix2coords } = require('./coords')
 
 const initCanvas = (selector, screenWidth, screenHeight) => {
   const container = document.querySelector(selector)
-  container.innerText = ''
 
   const canvas = document.createElement('canvas')
   canvas.setAttribute('width', screenWidth)
@@ -61,7 +60,7 @@ const drawWall = (canvas, wall, options) => {
 }
 
 const writeText = (canvas, text, options) => {
-  canvas.font = `${options.fontSize}px sans-serif`
+  canvas.font = `${options.fontSize}px "Major Mono Display"`
   canvas.textAlign = 'center'
   canvas.fillStyle = 'white'
 

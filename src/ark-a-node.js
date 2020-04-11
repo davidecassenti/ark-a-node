@@ -1,11 +1,11 @@
-const { initCanvas } = require('./helpers/drawing')
+const { initCanvas, writeText } = require('./helpers/drawing')
 const { generateWall, play } = require('./helpers/game')
 
 function start (selector, {
   screenWidth = 640,
   screenHeight = 480,
   wallWidth = 7,
-  wallHeight = 5
+  wallHeight = 6
 }) {
   const options = {
     screenWidth,
@@ -13,7 +13,7 @@ function start (selector, {
     wallWidth,
     wallHeight,
 
-    fontSize: 42 * screenHeight / 480,
+    fontSize: 24 * screenHeight / 480,
     speed: Math.ceil(10 * 480 / screenHeight),
     ballSize: 7 * screenHeight / 480,
     wallPieceHeight: 10 * screenHeight / 240,
@@ -32,7 +32,7 @@ function start (selector, {
   }
 
   const canvas = initCanvas(selector, screenWidth, screenHeight)
-  const wall = generateWall(wallWidth, wallHeight)
+  const ctx = canvas.getContext('2d')
 
   const status = {
     status: 'gameover',
@@ -49,6 +49,7 @@ function start (selector, {
 
       case 'ready': {
         status.status = 'playing'
+        canvas.requestPointerLock()
         return
       }
 
@@ -58,9 +59,10 @@ function start (selector, {
     }
 
     canvas.requestPointerLock()
+    const wall = generateWall(wallWidth, wallHeight)
 
     play(
-      canvas.getContext('2d'),
+      ctx,
       wall,
       screenWidth / 2,
       [screenWidth / 2, screenHeight - options.padHeight - options.ballSize],
@@ -76,7 +78,9 @@ function start (selector, {
 
   canvas.addEventListener('click', beginGame)
 
-  beginGame()
+  document.fonts.ready.then((font) => {
+    writeText(ctx, 'click to play', options)
+  })
 }
 
 exports.start = start

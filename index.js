@@ -1,6 +1,6 @@
-const arkanoid = require('./src/js-arkanoid')
+const arkanoid = require('./src/ark-a-node')
 
 arkanoid.start('#root', {
-  screenWidth: 800,
-  screenHeight: 600
+  screenWidth: 1024,
+  screenHeight: 576
 })
