@@ -1,18 +1,24 @@
+/* global screen */
 const { initAudio } = require('./helpers/sounds')
 const { initCanvas, writeText } = require('./helpers/drawing')
 const { generateWall, play } = require('./helpers/game')
 
-function start (selector, {
-  screenWidth = 640,
-  screenHeight = 480,
-  wallWidth = 7,
-  wallHeight = 6
-}) {
-  const options = {
+const getOptions = (selector) => {
+  const game = document.querySelector(selector)
+
+  let screenWidth = game.clientWidth
+  let screenHeight = screenWidth * 9 / 16
+
+  if (screenHeight > game.clientHeight) {
+    screenHeight = game.clientHeight
+    screenWidth = screenHeight * 16 / 9
+  }
+
+  return {
     screenWidth,
     screenHeight,
-    wallWidth,
-    wallHeight,
+    wallWidth: 7,
+    wallHeight: 6,
 
     fontSize: 24 * screenHeight / 480,
     speed: Math.ceil(10 * 480 / screenHeight),
@@ -31,8 +37,12 @@ function start (selector, {
       'whitesmoke'
     ]
   }
+}
 
-  const canvas = initCanvas(selector, screenWidth, screenHeight)
+function start (selector) {
+  const options = getOptions(selector)
+
+  const canvas = initCanvas(selector, options.screenWidth, options.screenHeight)
   const ctx = canvas.getContext('2d')
 
   const status = {
@@ -62,27 +72,52 @@ function start (selector, {
     }
 
     canvas.requestPointerLock()
-    const wall = generateWall(wallWidth, wallHeight)
+    const wall = generateWall(options.wallWidth, options.wallHeight)
 
     play(
       ctx,
       wall,
-      screenWidth / 2,
-      [screenWidth / 2, screenHeight - options.padHeight - options.ballSize],
+      options.screenWidth / 2,
+      [options.screenWidth / 2, options.screenHeight - options.padHeight - options.ballSize],
       [0, 0],
       status,
       options
     )
   }
 
-  canvas.addEventListener('mousemove', e => {
+  const onMouseMove = e => {
     status.mouseX = e.movementX
-  })
+  }
 
+  const onOrientationChange = () => {
+    status.status = 'closed'
+    setTimeout(() => {
+      canvas.removeEventListener('mousemove', onMouseMove)
+      window.removeEventListener('orientationchange', onOrientationChange)
+      window.removeEventListener('devicemotion', onDeviceMotion)
+      canvas.removeEventListener('click', beginGame)
+      document.querySelector(selector).innerText = ''
+      start(selector, {})
+    }, 250)
+  }
+
+  const onDeviceMotion = e => {
+    status.mouseX = 2.5 * (
+      screen.orientation.angle === 0 ? -e.accelerationIncludingGravity.x :
+      screen.orientation.angle === 90 ? e.accelerationIncludingGravity.y :
+      screen.orientation.angle === 180 ? e.accelerationIncludingGravity.x :
+      screen.orientation.angle === 270 ? -e.accelerationIncludingGravity.y :
+      /* else */ 0
+    )
+  }
+
+  canvas.addEventListener('mousemove', onMouseMove)
+  window.addEventListener('orientationchange', onOrientationChange)
+  window.addEventListener('devicemotion', onDeviceMotion)
   canvas.addEventListener('click', beginGame)
 
   document.fonts.ready.then((font) => {
-    writeText(ctx, 'click to play', options)
+    writeText(ctx, 'Ark-a-Node', options)
   })
 }
 
