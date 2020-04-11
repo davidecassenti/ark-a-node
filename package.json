@@ -1,11 +1,10 @@
 {
-  "name": "js-arkanoid",
+  "name": "@davidecassenti/ark-a-node",
   "version": "1.0.0",
-  "description": "",
+  "description": "Just an arkanoid-like game in Javascript",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server --open",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "webpack-dev-server --open"
   },
   "author": "Davide Cassenti",
   "license": "MIT",
