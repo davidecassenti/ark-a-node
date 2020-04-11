@@ -1,14 +1,20 @@
-const pause = to => new Promise((resolve) => setTimeout(resolve, to))
+let ctx, gain
 
-const beep = (frequency = 440, duration = 25) => new Promise((resolve) => {
-  if (!window.AudioContext) return
+const initAudio = () => {
+  if (!window.AudioContext || ctx) return
 
-  const ctx = new window.AudioContext()
+  ctx = new window.AudioContext()
 
-  const gain = ctx.createGain()
+  gain = ctx.createGain()
   gain.gain.value = 0.1
   gain.connect(ctx.destination)
 
+  return { ctx, gain }
+}
+
+const pause = to => new Promise((resolve) => setTimeout(resolve, to))
+
+const beep = (frequency = 440, duration = 25) => new Promise((resolve) => {
   const osc = ctx.createOscillator()
   osc.frequency.setValueAtTime(frequency, ctx.currentTime)
   osc.type = 'square'
@@ -33,9 +39,8 @@ const playVictorySound = jingle(
   [698, 500]
 )
 
-beep(0, 0)
-
 module.exports = {
+  initAudio,
   beep,
   pause,
   jingle,

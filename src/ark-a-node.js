@@ -1,3 +1,4 @@
+const { initAudio } = require('./helpers/sounds')
 const { initCanvas, writeText } = require('./helpers/drawing')
 const { generateWall, play } = require('./helpers/game')
 
@@ -40,6 +41,8 @@ function start (selector, {
   }
 
   const beginGame = () => {
+    initAudio()
+
     switch (status.status) {
       case 'victory':
       case 'gameover': {
