@@ -29,9 +29,16 @@ const getBallPosition = ([x, y], [dx, dy]) => {
 
 // PAD
 
-const getPadHit = (ball, options) => {
-  const [, by] = ball
-  return by > options.screenHeight - options.padHeight - (options.ballSize / 2)
+const getPadHit = (ball, pad, options) => {
+  const [bx, by] = ball
+
+  const minX = pad - (options.padWidth / 2)
+  const maxX = pad + (options.padWidth / 2)
+
+  return (
+    bx > minX && bx < maxX &&
+    by > options.screenHeight - options.padHeight - (options.ballSize / 2)
+  )
 }
 
 const getPadPosition = (pad, delta, options) => {
@@ -77,7 +84,7 @@ const play = (canvas, wall, pad, ball, direction, status, options) => {
   const nextPad = getPadPosition(pad, status.mouseX, options)
 
   const wallHit = getWallHit(wall, nextWall)
-  const padHit = getPadHit(ball, options)
+  const padHit = getPadHit(ball, nextPad, options)
   const hit = wallHit || padHit
 
   const nextDirection = (

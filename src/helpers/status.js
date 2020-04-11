@@ -7,7 +7,7 @@ const isGameOver = (ball, pad, options) => {
   const halfPad = options.padWidth / 2
 
   return (
-    by >= options.screenHeight - options.padHeight - (options.ballSize / 2) &&
+    by >= options.screenHeight - (options.ballSize / 2) &&
     (bx > pad + halfPad || bx < pad - halfPad)
   )
 }
